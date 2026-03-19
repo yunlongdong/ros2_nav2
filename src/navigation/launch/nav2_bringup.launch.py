@@ -2,7 +2,6 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -73,44 +72,12 @@ def generate_launch_description():
         }.items()
     )
 
-    # AMCL for localization (optional, disable if using static map->odom TF)
-    use_amcl = LaunchConfiguration('use_amcl')
-    declare_use_amcl = DeclareLaunchArgument(
-        'use_amcl', default_value='false',
-        description='Whether to use AMCL for localization')
-
-    amcl_node = Node(
-        condition=IfCondition(use_amcl),
-        package='nav2_amcl',
-        executable='amcl',
-        name='amcl',
-        output='screen',
-        parameters=[params_file, {
-            'use_sim_time': use_sim_time
-        }])
-
-    # Lifecycle manager for AMCL
-    amcl_lifecycle_manager = Node(
-        condition=IfCondition(use_amcl),
-        package='nav2_lifecycle_manager',
-        executable='lifecycle_manager',
-        name='lifecycle_manager_amcl',
-        output='screen',
-        parameters=[{
-            'use_sim_time': use_sim_time,
-            'autostart': autostart,
-            'node_names': ['amcl']
-        }])
-
     return LaunchDescription([
         declare_use_sim_time,
         declare_map,
         declare_params_file,
         declare_autostart,
-        declare_use_amcl,
         map_server_node,
         map_lifecycle_manager,
-        amcl_node,
-        amcl_lifecycle_manager,
         nav2_navigation_launch,
     ])
