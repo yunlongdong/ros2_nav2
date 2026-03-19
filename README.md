@@ -121,6 +121,12 @@ sudo apt install ros-humble-nav2-bringup ros-humble-navigation2 ros-humble-rviz2
 
 ### 编译
 
+编译前注意修改[`src/navigation/params/nav2_params.yaml`](src/navigation/params/nav2_params.yaml)里面的`default_nav_to_pose_bt_xml`为绝对路径（否则会找不到自定义的行为树，这里的行为树为等待10s，没有其他行为），例如:
+
+```
+/home/aibox/Desktop/ros2_nav2/src/navigation/behavior_trees/navigate_to_pose_w_wait.xml
+```
+
 ```bash
 cd ~/Desktop/ros2_nav2
 colcon build --symlink-install
@@ -131,6 +137,9 @@ colcon build --symlink-install
 ```bash
 source install/setup.bash
 ```
+
+
+
 
 ### 启动导航仿真
 
@@ -271,3 +280,7 @@ ros2 launch fake_diff_drive sim_nav2.launch.py params_file:=/path/to/params.yaml
 | `loop_rate` | 20 Hz | 路径点检查频率 |
 | `stop_on_failure` | false | 某个路径点失败后继续执行后续点 |
 | `waypoint_pause_duration` | 200 ms | 到达每个路径点后的停留时间 |
+
+### 注意事项
+
+* `xy_goal_tolerance`修改时`general_goal_checker`和`FollowPath`里面的要一致
