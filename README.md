@@ -157,6 +157,12 @@ ros2 launch fake_diff_drive sim_nav2.launch.py
 2. 小车（`base_link`）开始沿路径移动
 3. 局部代价地图随小车实时更新
 
+可以在终端中执行如下命令查看导航任务的状态：
+```
+ros2 topic echo /navigate_to_pose/_action/status
+```
+
+
 ### 可选启动参数
 
 ```bash
