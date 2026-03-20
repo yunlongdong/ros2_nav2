@@ -162,6 +162,36 @@ ros2 launch fake_diff_drive sim_nav2.launch.py
 ros2 topic echo /navigate_to_pose/_action/status
 ```
 
+### 使用 Python 脚本发送目标并循环监听状态
+
+本仓库已提供脚本：
+
+`src/navigation/scripts/nav_goal_status_monitor.py`
+
+功能：
+- 发送 `NavigateToPose` goal（等价于给 Nav2 发目标点）
+- 订阅并循环监听 `/navigate_to_pose/_action/status`
+- 打印状态流转（`ACCEPTED -> EXECUTING -> SUCCEEDED/ABORTED/CANCELED`）
+
+使用方式（先 `colcon build --symlink-install` 并 `source install/setup.bash`）：
+
+```bash
+ros2 run nav2_bringup_custom nav_goal_status_monitor.py --x 1.0 --y 0.5 --yaw 1.57
+```
+
+可选参数：
+- `--frame-id`（默认 `map`）
+- `--wait-server-sec`（默认 `10.0`）
+
+状态码说明（`action_msgs/msg/GoalStatus`）：
+- `0`: UNKNOWN
+- `1`: ACCEPTED
+- `2`: EXECUTING
+- `3`: CANCELING
+- `4`: SUCCEEDED
+- `5`: CANCELED
+- `6`: ABORTED
+
 
 ### 可选启动参数
 
